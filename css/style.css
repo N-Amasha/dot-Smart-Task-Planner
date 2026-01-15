@@ -1,13 +1,266 @@
+/* Color Palette: Dark Theme */
+:root {
+    --dot-red: #E61E25;
+    --dot-black: #000000;      /* Pure black background */
+    --dot-dark-grey: #1A1A1B;  /* For cards/containers */
+    --dot-white: #ffffff;
+    --dot-text-grey: #a0a0a0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--dot-black);
+    color: var(--dot-white);
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+}
+
+/* Header style from screenshot */
+h1 {
+    text-align: center;
+    color: var(--dot-white);
+    font-weight: 800;
+    text-transform: lowercase;
+    font-size: 2.5rem;
+    margin-top: 20px;
+}
+
+h1::after {
+    content: '.';
+    color: var(--dot-red);
+}
+
+/* Form Container - Slight grey to stand out from black background */
+#taskForm {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: #111111;
+    padding: 30px;
+    border-radius: 20px;
+    margin-bottom: 40px;
+}
+
+input, select {
+    padding: 12px;
+    background: var(--dot-white);
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    color: #000;
+}
+
+/* Add Task Button */
+button[type="submit"] {
+    background-color: var(--dot-black);
+    color: white;
+    border: 1px solid #333;
+    padding: 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+    background-color: var(--dot-red);
+    border-color: var(--dot-red);
+}
+
+/* Filters Section */
+h2 {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+/* Container for Filters */
+#filters {
+    display: flex;
+    gap: 12px;
+    margin: 25px 0;
+    padding: 5px;
+    background: #111; /* Slightly lighter than the pure black bg */
+    border-radius: 50px;
+    width: fit-content;
+    border: 1px solid #222;
+}
+
+#filters button {
+    background: transparent;
+    color: #888; /* Muted color for inactive states */
+    border: none;
+    border-radius: 40px;
+    padding: 10px 24px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* Hover State */
+#filters button:hover {
+    color: #fff;
+    background: #222;
+}
+
+/* Active State - When a filter is selected */
+#filters button.active {
+    background: var(--dot-red);
+    color: white;
+    box-shadow: 0 4px 15px rgba(230, 30, 37, 0.3);
+}
+
+/* Better Summary Dashboard */
+#summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin: 25px 0;
+}
+
+#summary div {
+    background: #111; /* Slightly lighter than pure black */
+    padding: 15px;
+    border-radius: 15px;
+    text-align: center;
+    border: 1px solid #222;
+    transition: transform 0.3s ease;
+}
+
+#summary div:hover {
+    border-color: var(--dot-red);
+    transform: translateY(-3px);
+}
+
+#summary p {
+    margin: 0;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #888;
+}
+
+#summary span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 800;
+    color: var(--dot-red);
+    margin-top: 5px;
+}
+
+/* Specific color for the "Total" dot to stand out */
+#summary div:first-child span {
+    color: var(--dot-red);
+}
+
+/* Task List Styling */
+#taskList {
+    list-style: none;
+    padding: 0;
+    margin-top: 30px;
+}
+
+/* Modern Task Card */
+li {
+    background: #0d0d0d; /* Slightly lighter than the pure black bg */
+    border-radius: 16px;
+    padding: 20px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes content to sides */
+    border: 1px solid #1a1a1b;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+li:hover {
+    border-color: #333;
+    transform: translateY(-2px);
+    background: #111;
+}
+
+/* Left side of card (Checkbox + Text) */
+.task-content {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.task-details strong {
+    font-size: 1.1rem;
+    color: var(--dot-white);
+    display: block;
+    margin-bottom: 4px;
+}
+
+.task-info-text {
+    font-size: 0.85rem;
+    color: #666;
+    line-height: 1.4;
+}
+
+/* The "Red Dot" Checkbox Enhancement */
+input[type="checkbox"] {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--dot-red);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+    flex-shrink: 0;
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--dot-red);
+    box-shadow: 0 0 10px rgba(230, 30, 37, 0.4);
+}
+
+/* Redesigned Delete Button */
+li button {
+    background: rgba(255, 255, 255, 0.05);
+    color: #ff4d4d; /* Subtle red */
+    border: 1px solid rgba(255, 77, 77, 0.2);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+li button:hover {
+    background: #ff4d4d;
+    color: white;
+    border-color: #ff4d4d;
+    box-shadow: 0 4px 12px rgba(255, 77, 77, 0.3);
+}
+/* The circular "Dot" Checkbox */
+input[type="checkbox"] {
+    appearance: none;
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--dot-red);
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+}
+
+input[type="checkbox"]:checked {
+    background-color: var(--dot-red);
+    box-shadow: inset 0 0 0 3px #111;
+}
+
+/* Priority & Status Styles */
 .completed {
-    text-decoration: line-through;
-    opacity: 0.6;
+    opacity: 0.4;
 }
 
 .overdue {
-    border-left: 4px solid red;
-    padding-left: 5px;
-}
-
-.high-priority {
-    font-weight: bold;
+    border-left: 4px solid var(--dot-red);
 }
