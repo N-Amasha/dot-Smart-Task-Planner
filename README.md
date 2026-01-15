@@ -28,11 +28,17 @@ A web-based task management application that helps users organize, prioritize, a
 
 ### 3. Task Filters & Summary
 ![Task Filters](assets/screenshots/Filters_Screenshot.png)
+
+### 4. Task Filters - All Tasks
 ![Task Filters](assets/screenshots/Filters_All_Tasks_Screenshot.png)
+
+### 5. Task Filters - Completed Tasks
 ![Task Filters](assets/screenshots/Filters_Completed_Tasks_Screenshot.png)
+
+### 6. Task Filters - Pending Tasks
 ![Task Filters](assets/screenshots/Filters_Pending_Tasks_Screenshot.png)
 
-### 4. Overdue Task Highlight
+### 7. Overdue Task Highlight
 ![Overdue Task](assets/screenshots/Task_Overdue_Screenshot.png)
 
 ---
