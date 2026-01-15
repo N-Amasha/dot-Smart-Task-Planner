@@ -1,7 +1,7 @@
 /* Color Palette: Dark Theme */
 :root {
     --dot-red: #E61E25;
-    --dot-black: #000000;      /* Pure black background */
+    --dot-black: #231f20;      /* Pure black background */
     --dot-dark-grey: #1A1A1B;  /* For cards/containers */
     --dot-white: #ffffff;
     --dot-text-grey: #a0a0a0;
@@ -16,7 +16,6 @@ body {
     padding: 20px;
 }
 
-/* Header style from screenshot */
 h1 {
     text-align: center;
     color: var(--dot-white);
