@@ -1,4 +1,13 @@
 .completed {
-  text-decoration: line-through;
-  opacity: 0.6;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.overdue {
+    border-left: 4px solid red;
+    padding-left: 5px;
+}
+
+.high-priority {
+    font-weight: bold;
 }

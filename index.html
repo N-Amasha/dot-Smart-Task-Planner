@@ -18,8 +18,22 @@
         </select>
         <button type="submit">Add Task</button>
     </form>
-    
+
+    <h2>Filters</h2>
+    <div id="filters">
+        <button data-status="all">All</button>
+        <button data-status="pending">Pending</button>
+        <button data-status="completed">Completed</button>
+    </div>
+
+    <div id="summary">
+        <p>Total Tasks: <span id="totalCount">0</span></p>
+        <p>Completed: <span id="completedCount">0</span></p>
+        <p>Pending: <span id="pendingCount">0</span></p>
+    </div>
+
     <ul id="taskList"></ul>
+
     
     <script src="js/app.js"></script>
 </body>

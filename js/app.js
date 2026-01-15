@@ -1,29 +1,26 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // ----- TASK ARRAY -----
   let tasks = [];
+  const STORAGE_KEY = "smartTasks";
 
-  // ----- SELECT ELEMENTS -----
+  // Elements
   const taskForm = document.getElementById("taskForm");
   const titleInput = document.getElementById("title");
   const dateInput = document.getElementById("dueDate");
   const priorityInput = document.getElementById("priority");
   const taskList = document.getElementById("taskList");
 
-  // ----- LOCAL STORAGE KEY -----
-  const STORAGE_KEY = "smartTasks";
+  const filtersDiv = document.getElementById("filters");
+  const totalCount = document.getElementById("totalCount");
+  const completedCount = document.getElementById("completedCount");
+  const pendingCount = document.getElementById("pendingCount");
 
-  // ----- LOAD TASKS FROM LOCALSTORAGE -----
+  // ----- LOCALSTORAGE -----
   function loadTasks() {
-    const storedTasks = localStorage.getItem(STORAGE_KEY);
-    if (storedTasks) {
-      tasks = JSON.parse(storedTasks);
-    } else {
-      tasks = [];
-    }
-    renderTasks();
+    const stored = localStorage.getItem(STORAGE_KEY);
+    tasks = stored ? JSON.parse(stored) : [];
+    renderTasks(tasks);
   }
 
-  // ----- SAVE TASKS TO LOCALSTORAGE -----
   function saveTasks() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
   }
@@ -31,13 +28,12 @@ document.addEventListener("DOMContentLoaded", function () {
   // ----- FORM SUBMIT -----
   taskForm.addEventListener("submit", function (e) {
     e.preventDefault();
-
     const title = titleInput.value.trim();
     const dueDate = dateInput.value;
     const priority = priorityInput.value;
 
-    if (title === "" || dueDate === "") {
-      alert("Please enter task title and due date");
+    if (!title || !dueDate) {
+      alert("Please enter title and due date");
       return;
     }
 
@@ -46,30 +42,48 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // ----- ADD TASK -----
   function addTask(title, dueDate, priority) {
-    const task = {
+    tasks.push({
       id: Date.now(),
       title,
       dueDate,
       priority,
       completed: false
-    };
-
-    tasks.push(task);
+    });
     saveTasks();
-    renderTasks();
+    renderTasks(tasks);
     clearForm();
   }
 
+  // ----- CLEAR FORM -----
+  function clearForm() {
+    taskForm.reset();
+    titleInput.focus();
+  }
+
+  // ----- CHECK OVERDUE -----
+  function isOverdue(task) {
+    const today = new Date().setHours(0,0,0,0);
+    const due = new Date(task.dueDate).setHours(0,0,0,0);
+    return !task.completed && due < today;
+  }
+
+  // ----- PRIORITY SORT -----
+  function sortTasksByPriority(taskArray) {
+    const order = { High: 1, Medium: 2, Low: 3 };
+    return taskArray.sort((a,b) => order[a.priority] - order[b.priority]);
+  }
+
   // ----- RENDER TASKS -----
-  function renderTasks() {
+  function renderTasks(taskArray) {
+    const sortedTasks = sortTasksByPriority([...taskArray]);
     taskList.innerHTML = "";
 
-    tasks.forEach(task => {
+    sortedTasks.forEach(task => {
       const li = document.createElement("li");
 
-      if (task.completed) {
-        li.classList.add("completed");
-      }
+      if (task.completed) li.classList.add("completed");
+      if (isOverdue(task)) li.classList.add("overdue");
+      if (task.priority === "High") li.classList.add("high-priority");
 
       li.innerHTML = `
         <strong>${task.title}</strong><br>
@@ -77,35 +91,53 @@ document.addEventListener("DOMContentLoaded", function () {
         Priority: ${task.priority}<br>
       `;
 
-      // Complete checkbox
       const checkbox = document.createElement("input");
       checkbox.type = "checkbox";
       checkbox.checked = task.completed;
       checkbox.addEventListener("change", () => {
         task.completed = !task.completed;
         saveTasks();
-        renderTasks();
+        renderTasks(tasks);
       });
 
-      // Delete button
       const delBtn = document.createElement("button");
       delBtn.textContent = "Delete";
       delBtn.addEventListener("click", () => {
         tasks = tasks.filter(t => t.id !== task.id);
         saveTasks();
-        renderTasks();
+        renderTasks(tasks);
       });
 
       li.prepend(checkbox);
       li.appendChild(delBtn);
       taskList.appendChild(li);
     });
+
+    updateSummary(taskArray);
   }
 
-  // ----- CLEAR FORM -----
-  function clearForm() {
-    taskForm.reset();
-    titleInput.focus();
+  // ----- FILTER LOGIC -----
+  function filterTasks(status) {
+    let filtered = tasks;
+    if (status === "pending") filtered = tasks.filter(t => !t.completed);
+    else if (status === "completed") filtered = tasks.filter(t => t.completed);
+
+    renderTasks(filtered);
+  }
+
+  // ----- FILTER BUTTON EVENTS -----
+  filtersDiv.addEventListener("click", (e) => {
+    if (e.target.tagName === "BUTTON") {
+      const status = e.target.dataset.status;
+      filterTasks(status);
+    }
+  });
+
+  // ----- SUMMARY -----
+  function updateSummary(taskArray) {
+    totalCount.textContent = taskArray.length;
+    completedCount.textContent = taskArray.filter(t => t.completed).length;
+    pendingCount.textContent = taskArray.filter(t => !t.completed).length;
   }
 
   // ----- INITIAL LOAD -----
