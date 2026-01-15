@@ -41,21 +41,48 @@ document.addEventListener("DOMContentLoaded",function() {
 
 
     //render task list(DOM Manipulation)
-    function renderTasks(){
-        taskList.innerHTML = "";
+    function renderTasks() {
+    taskList.innerHTML = "";
 
-        tasks.forEach(task => {
-            const li = document.createElement("li");
+    tasks.forEach(task => {
+        const li = document.createElement("li");
 
-            li.innerHTML = `
-                <strong>${task.title}</strong><br>
-                Due:${task.dueDate}<br>
-                Priority:${task.priority}
-            `;
+        // Apply completed style
+        if(task.completed){
+            li.classList.add("completed");
+        }
 
-            taskList.appendChild(li);
+        // Title + date + priority
+        li.innerHTML = `
+          <strong>${task.title}</strong><br>
+          Due: ${task.dueDate}<br>
+          Priority: ${task.priority}<br>
+        `;
+
+        // Create checkbox
+        const checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.checked = task.completed;
+        checkbox.addEventListener("change", () => {
+            task.completed = !task.completed;
+            renderTasks();
         });
-    }
+
+        // Create delete button
+        const delBtn = document.createElement("button");
+        delBtn.textContent = "Delete";
+        delBtn.addEventListener("click", () => {
+            tasks = tasks.filter(t => t.id !== task.id);
+            renderTasks();
+        });
+
+        li.prepend(checkbox); // Add checkbox at start
+        li.appendChild(delBtn); // Add delete button at end
+
+        taskList.appendChild(li);
+    });
+}
+
 
 
     //clear form after submit
@@ -63,4 +90,34 @@ document.addEventListener("DOMContentLoaded",function() {
         taskForm.reset();
         titleInput.focus();
     }
+
+
+    window.toggleComplete = function(id){
+        const task = tasks.find(task => task.id === id);
+
+        if(task){
+            task.completed = !task.completed;
+            renderTasks();
+        }
+    }
+
+
+    window.deleteTask = function(id){
+        tasks = tasks.filter(task => task.id !== id);
+        renderTasks();
+    }
+
+
+    // Complete checkbox
+    li.querySelector("input[type='checkbox']").addEventListener("change", () => {
+    task.completed = !task.completed;
+    renderTasks();
+    });
+
+    // Delete button
+    li.querySelector("button").addEventListener("click", () => {
+    tasks = tasks.filter(t => t.id !== task.id);
+    renderTasks();
+    });
+
 });
