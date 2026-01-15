@@ -1,123 +1,113 @@
-document.addEventListener("DOMContentLoaded",function() {
-    let tasks = [];
+document.addEventListener("DOMContentLoaded", function () {
+  // ----- TASK ARRAY -----
+  let tasks = [];
 
-    const taskForm = document.getElementById("taskForm");
-    const titleInput = document.getElementById("title");
-    const dateInput = document.getElementById("dueDate");
-    const priorityInput = document.getElementById("priority");
-    const taskList = document.getElementById("taskList");
+  // ----- SELECT ELEMENTS -----
+  const taskForm = document.getElementById("taskForm");
+  const titleInput = document.getElementById("title");
+  const dateInput = document.getElementById("dueDate");
+  const priorityInput = document.getElementById("priority");
+  const taskList = document.getElementById("taskList");
 
-    //capture form submit
-    taskForm.addEventListener("submit",function (e) {
-        e.preventDefault();
+  // ----- LOCAL STORAGE KEY -----
+  const STORAGE_KEY = "smartTasks";
 
-        const title = titleInput.value.trim();
-        const dueDate = dateInput.value;
-        const priority = priorityInput.value;
+  // ----- LOAD TASKS FROM LOCALSTORAGE -----
+  function loadTasks() {
+    const storedTasks = localStorage.getItem(STORAGE_KEY);
+    if (storedTasks) {
+      tasks = JSON.parse(storedTasks);
+    } else {
+      tasks = [];
+    }
+    renderTasks();
+  }
 
-        //validation
-        if(title === "" || dueDate === ""){
-            alert("Please enter task title and due date");
-            return;
-        }
+  // ----- SAVE TASKS TO LOCALSTORAGE -----
+  function saveTasks() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(tasks));
+  }
 
-        addTask(title,dueDate,priority);
-    });
+  // ----- FORM SUBMIT -----
+  taskForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-    //add task to array
-    function addTask(title,dueDate,priority){
-        const task = {
-            id: Date.now(),
-            title: title,
-            dueDate: dueDate,
-            priority: priority,
-            completed: false
-        };
+    const title = titleInput.value.trim();
+    const dueDate = dateInput.value;
+    const priority = priorityInput.value;
 
-        tasks.push(task);
-        renderTasks();
-        clearForm();
+    if (title === "" || dueDate === "") {
+      alert("Please enter task title and due date");
+      return;
     }
 
+    addTask(title, dueDate, priority);
+  });
 
-    //render task list(DOM Manipulation)
-    function renderTasks() {
+  // ----- ADD TASK -----
+  function addTask(title, dueDate, priority) {
+    const task = {
+      id: Date.now(),
+      title,
+      dueDate,
+      priority,
+      completed: false
+    };
+
+    tasks.push(task);
+    saveTasks();
+    renderTasks();
+    clearForm();
+  }
+
+  // ----- RENDER TASKS -----
+  function renderTasks() {
     taskList.innerHTML = "";
 
     tasks.forEach(task => {
-        const li = document.createElement("li");
+      const li = document.createElement("li");
 
-        // Apply completed style
-        if(task.completed){
-            li.classList.add("completed");
-        }
+      if (task.completed) {
+        li.classList.add("completed");
+      }
 
-        // Title + date + priority
-        li.innerHTML = `
-          <strong>${task.title}</strong><br>
-          Due: ${task.dueDate}<br>
-          Priority: ${task.priority}<br>
-        `;
+      li.innerHTML = `
+        <strong>${task.title}</strong><br>
+        Due: ${task.dueDate}<br>
+        Priority: ${task.priority}<br>
+      `;
 
-        // Create checkbox
-        const checkbox = document.createElement("input");
-        checkbox.type = "checkbox";
-        checkbox.checked = task.completed;
-        checkbox.addEventListener("change", () => {
-            task.completed = !task.completed;
-            renderTasks();
-        });
-
-        // Create delete button
-        const delBtn = document.createElement("button");
-        delBtn.textContent = "Delete";
-        delBtn.addEventListener("click", () => {
-            tasks = tasks.filter(t => t.id !== task.id);
-            renderTasks();
-        });
-
-        li.prepend(checkbox); // Add checkbox at start
-        li.appendChild(delBtn); // Add delete button at end
-
-        taskList.appendChild(li);
-    });
-}
-
-
-
-    //clear form after submit
-    function clearForm(){
-        taskForm.reset();
-        titleInput.focus();
-    }
-
-
-    window.toggleComplete = function(id){
-        const task = tasks.find(task => task.id === id);
-
-        if(task){
-            task.completed = !task.completed;
-            renderTasks();
-        }
-    }
-
-
-    window.deleteTask = function(id){
-        tasks = tasks.filter(task => task.id !== id);
+      // Complete checkbox
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = task.completed;
+      checkbox.addEventListener("change", () => {
+        task.completed = !task.completed;
+        saveTasks();
         renderTasks();
-    }
+      });
 
+      // Delete button
+      const delBtn = document.createElement("button");
+      delBtn.textContent = "Delete";
+      delBtn.addEventListener("click", () => {
+        tasks = tasks.filter(t => t.id !== task.id);
+        saveTasks();
+        renderTasks();
+      });
 
-    // Complete checkbox
-    li.querySelector("input[type='checkbox']").addEventListener("change", () => {
-    task.completed = !task.completed;
-    renderTasks();
+      li.prepend(checkbox);
+      li.appendChild(delBtn);
+      taskList.appendChild(li);
     });
+  }
 
-    // Delete button
-    li.querySelector("button").addEventListener("click", () => {
-    tasks = tasks.filter(t => t.id !== task.id);
-    renderTasks();
-    });
+  // ----- CLEAR FORM -----
+  function clearForm() {
+    taskForm.reset();
+    titleInput.focus();
+  }
 
+  // ----- INITIAL LOAD -----
+  loadTasks();
 });
